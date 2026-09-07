@@ -1,0 +1,5 @@
+# generated data (event archive + dedupe state)
+data/
+__pycache__/
+*.pyc
+.DS_Store
