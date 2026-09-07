@@ -1,5 +1,8 @@
 # generated data (event archive + dedupe state)
 data/
+# generated site build (deployed to gh-pages branch)
+out/
+node_modules/
 __pycache__/
 *.pyc
 .DS_Store

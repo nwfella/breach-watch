@@ -1,0 +1,23 @@
+{
+  "name": "breach-watch",
+  "version": "0.2.0",
+  "description": "BreachWatch site builder dev deps",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nwfella/breach-watch.git"
+  },
+  "keywords": [],
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/nwfella/breach-watch/issues"
+  },
+  "homepage": "https://github.com/nwfella/breach-watch#readme",
+  "private": "true",
+  "devDependencies": {
+    "jsdom": "^30.0.1"
+  }
+}

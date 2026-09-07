@@ -225,11 +225,21 @@ def collect_ca_doj(cfg: dict, full: bool = False, max_pages: int = 3) -> tuple:
             link = re.search(r'href="([^"]+)"', row)
             href = urljoin(CA_DOJ, link.group(1)) if link else url
             d = ''
-            m = re.search(r'(\d{4}-\d{2}-\d{2}|[A-Z][a-z]+ \d{1,2}, \d{4})', text)
-            if m:
-                raw = m.group(1)
+            # CA DOJ lists breach date + reported date as MM/DD/YYYY (or ISO /
+            # Month-name). The LAST date in the row is the reported date, which
+            # is what drives digest recency.
+            dates = re.findall(
+                r'(\d{4}-\d{2}-\d{2}|\d{1,2}/\d{1,2}/\d{4}|[A-Z][a-z]+ \d{1,2}, \d{4})',
+                text)
+            if dates:
+                raw = dates[-1]
                 try:
-                    d = raw if '-' in raw else datetime.strptime(raw, '%B %d, %Y').strftime('%Y-%m-%d')
+                    if '-' in raw:
+                        d = raw
+                    elif '/' in raw:
+                        d = datetime.strptime(raw, '%m/%d/%Y').strftime('%Y-%m-%d')
+                    else:
+                        d = datetime.strptime(raw, '%B %d, %Y').strftime('%Y-%m-%d')
                 except ValueError:
                     d = ''
             ev = BreachEvent(

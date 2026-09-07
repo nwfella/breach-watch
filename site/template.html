@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BreachWatch — Canada &amp; US data breach digest</title>
+<meta name="description" content="Independent daily digest of data breaches affecting Canada and US residents: breach dumps, US state filings, regulator news and press announcements. Free forever.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23111827'/%3E%3Ctext x='50' y='72' font-size='62' text-anchor='middle'%3E%F0%9F%9B%A1%3C/text%3E%3C/svg%3E">
+<style>
+  :root {
+    --bg:#faf9f7; --surface:#ffffff; --surface2:#f4f2ee;
+    --ink:#16181d; --ink-soft:#5b6068; --ink-faint:#8a8f98;
+    --rule:#e6e2da; --accent:#0f2a4a; --accent-ink:#ffffff;
+    --link:#0b5cad;
+    --ca:#b3261e; --ca-bg:#fbeae8;
+    --qc:#1d4ed8; --qc-bg:#e9eefa;
+    --us:#0f766e; --us-bg:#e5f4f2;
+    --un:#6b7280; --un-bg:#f1f2f4;
+    --warn:#8a5a00; --warn-bg:#fdf3dd;
+    --serif: Georgia, 'Times New Roman', serif;
+    --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    --mono: ui-monospace, 'Cascadia Mono', Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg:#0d1117; --surface:#12161f; --surface2:#171c27;
+      --ink:#e6e8ee; --ink-soft:#9aa3b2; --ink-faint:#6b7484;
+      --rule:#242b38; --accent:#c9d6e8; --accent-ink:#0d1117;
+      --link:#6cb2f5;
+      --ca:#f2a09a; --ca-bg:#3a1d1b;
+      --qc:#9db8f5; --qc-bg:#1a2340;
+      --us:#7fd4cc; --us-bg:#12302d;
+      --un:#a5adba; --un-bg:#232936;
+      --warn:#e8c06a; --warn-bg:#3a2e12;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin:0; background:var(--bg); color:var(--ink);
+         font:16px/1.55 var(--sans); -webkit-font-smoothing:antialiased; }
+  a { color:var(--link); text-decoration:none; }
+  a:hover { text-decoration:underline; }
+
+  .wrap { max-width:1060px; margin:0 auto; padding:0 20px; }
+
+  /* masthead */
+  header { border-bottom:1px solid var(--rule); background:color-mix(in srgb, var(--surface) 85%, transparent);
+           position:sticky; top:0; z-index:20; backdrop-filter:blur(8px); }
+  .mast { display:flex; align-items:center; gap:14px; padding:12px 20px; max-width:1060px; margin:0 auto; }
+  .brand { display:flex; align-items:center; gap:10px; font-weight:800; letter-spacing:.2px; }
+  .brand .mark { width:30px; height:30px; border-radius:8px; background:var(--accent); color:var(--accent-ink);
+                 display:grid; place-items:center; font-size:16px; }
+  .brand .name { font-size:19px; font-family:var(--serif); }
+  .brand .name b { font-weight:700; }
+  .mast .spacer { flex:1; }
+  .updated { font-size:12.5px; color:var(--ink-soft); background:var(--surface2);
+             border:1px solid var(--rule); padding:5px 10px; border-radius:999px;
+             white-space:nowrap; }
+  .updated b { color:var(--ink); font-weight:600; }
+  @media (max-width:640px){ .updated .lbl { display:none; } }
+
+  /* hero */
+  .hero { padding:52px 0 8px; }
+  .kicker { font-size:12.5px; font-weight:700; letter-spacing:2.2px; text-transform:uppercase;
+            color:var(--ca); margin:0 0 12px; }
+  h1 { font-family:var(--serif); font-size:clamp(30px,5vw,46px); line-height:1.12;
+       margin:0 0 14px; font-weight:600; letter-spacing:-.5px; }
+  h1 .thin { font-weight:400; color:var(--ink-soft); }
+  .sub { max-width:720px; color:var(--ink-soft); font-size:17px; margin:0 0 20px; }
+  .cta { display:flex; gap:10px; flex-wrap:wrap; }
+  .btn { display:inline-block; padding:10px 18px; border-radius:10px; font-weight:600; font-size:14.5px;
+         border:1px solid var(--rule); background:var(--surface); color:var(--ink); }
+  .btn.primary { background:var(--accent); color:var(--accent-ink); border-color:var(--accent); }
+  .btn:hover { text-decoration:none; filter:brightness(1.06); }
+
+  /* stat strip */
+  .stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:12px;
+           margin:34px 0 8px; }
+  .stat { background:var(--surface); border:1px solid var(--rule); border-radius:14px; padding:16px 18px; }
+  .stat .v { font-size:27px; font-weight:700; font-family:var(--serif); letter-spacing:-.3px; line-height:1.1; }
+  .stat .k { font-size:12.5px; color:var(--ink-soft); margin-top:5px; line-height:1.35; }
+
+  /* toolbar */
+  .toolbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin:26px 0 6px; }
+  .search { flex:1 1 220px; position:relative; }
+  .search input { width:100%; padding:10px 14px 10px 36px; border-radius:10px;
+                  border:1px solid var(--rule); background:var(--surface); color:var(--ink);
+                  font:inherit; font-size:14.5px; }
+  .search svg { position:absolute; left:11px; top:50%; transform:translateY(-50%); opacity:.5; }
+  .count { font-size:13px; color:var(--ink-faint); white-space:nowrap; }
+  select { padding:9px 12px; border-radius:10px; border:1px solid var(--rule);
+           background:var(--surface); color:var(--ink); font:inherit; font-size:14px; }
+  .chips { display:flex; gap:7px; flex-wrap:wrap; margin:4px 0 0; }
+  .chip { border:1px solid var(--rule); background:var(--surface); color:var(--ink-soft);
+          font:inherit; font-size:13px; font-weight:600; padding:6px 13px; border-radius:999px;
+          cursor:pointer; transition:border-color .12s, color .12s; }
+  .chip:hover { border-color:var(--ink-faint); }
+  .chip.on { background:var(--ink); color:var(--bg); border-color:var(--ink); }
+  .chips.grp .chip.on.r-ca { background:var(--ca); border-color:var(--ca); color:#fff; }
+  .chips.grp .chip.on.r-qc { background:var(--qc); border-color:var(--qc); color:#fff; }
+  .chips.grp .chip.on.r-us { background:var(--us); border-color:var(--us); color:#fff; }
+  .chips.grp .chip.on.r-un { background:var(--un); border-color:var(--un); color:#fff; }
+
+  /* event list */
+  .list { margin:18px 0 10px; display:flex; flex-direction:column; gap:12px; }
+  .ev { background:var(--surface); border:1px solid var(--rule); border-radius:14px;
+        padding:15px 18px; }
+  .ev-top { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:6px; }
+  .rtag { font-size:11px; font-weight:700; letter-spacing:.6px; text-transform:uppercase;
+          padding:3px 9px; border-radius:999px; }
+  .rtag.r-ca { background:var(--ca-bg); color:var(--ca); }
+  .rtag.r-qc { background:var(--qc-bg); color:var(--qc); }
+  .rtag.r-us { background:var(--us-bg); color:var(--us); }
+  .rtag.r-un { background:var(--un-bg); color:var(--un); }
+  .ktag { font-size:11px; font-weight:600; padding:3px 9px; border-radius:6px;
+          border:1px solid var(--rule); color:var(--ink-soft); letter-spacing:.3px; }
+  .date { margin-left:auto; font-size:12.5px; color:var(--ink-faint); font-variant-numeric:tabular-nums;
+          white-space:nowrap; }
+  .ev h3 { margin:2px 0 4px; font-size:16.5px; line-height:1.35; font-weight:650; }
+  .ev h3 a { color:var(--ink); }
+  .ev h3 a:hover { color:var(--link); text-decoration:none; }
+  .desc { color:var(--ink-soft); font-size:14px; margin:0 0 8px; }
+  .meta { display:flex; align-items:center; gap:8px; flex-wrap:wrap; font-size:12.5px; }
+  .rec { font-weight:700; color:var(--ink); background:var(--surface2);
+         border:1px solid var(--rule); border-radius:8px; padding:3px 9px; font-variant-numeric:tabular-nums; }
+  .dc { font-size:11.5px; color:var(--ink-soft); border:1px solid var(--rule);
+        border-radius:6px; padding:2px 7px; }
+  .sens { font-size:11.5px; font-weight:600; color:var(--warn); background:var(--warn-bg);
+          border-radius:6px; padding:2px 7px; }
+  .src { color:var(--link); font-size:12.5px; }
+  .empty { text-align:center; color:var(--ink-faint); padding:56px 10px; font-size:15px; }
+
+  /* sections */
+  section { padding:36px 0 8px; }
+  h2 { font-family:var(--serif); font-size:25px; font-weight:600; margin:0 0 6px; letter-spacing:-.2px; }
+  .lede { color:var(--ink-soft); margin:0 0 18px; max-width:760px; }
+
+  /* methodology */
+  .method { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:14px; }
+  .mcard { background:var(--surface); border:1px solid var(--rule); border-radius:14px; padding:18px 20px; }
+  .mcard h3 { margin:0 0 8px; font-size:15px; }
+  .mcard p { margin:0 0 10px; font-size:13.8px; color:var(--ink-soft); }
+  .mcard ul { margin:0; padding-left:18px; font-size:13.8px; color:var(--ink-soft); }
+  .mcard li { margin:4px 0; }
+  .mcard a { color:var(--ink); border-bottom:1px dotted var(--ink-faint); }
+  .mcard a:hover { border-bottom-style:solid; text-decoration:none; }
+  .note { background:var(--warn-bg); color:var(--warn); border-radius:10px; padding:10px 14px;
+          font-size:13.5px; margin-top:14px; border:1px solid color-mix(in srgb, var(--warn) 25%, transparent); }
+
+  footer { border-top:1px solid var(--rule); margin-top:48px; padding:26px 0 44px;
+           color:var(--ink-faint); font-size:13px; }
+  footer .row { display:flex; gap:16px; flex-wrap:wrap; align-items:center; }
+  footer a { color:var(--ink-soft); }
+
+  .noscript { display:block; padding:14px; border:1px dashed var(--rule); border-radius:10px;
+              color:var(--ink-soft); margin:18px 0; }
+</style>
+</head>
+<body>
+<header>
+  <div class="mast">
+    <div class="brand"><span class="mark">🛡</span><span class="name"><b>Breach</b>Watch</span></div>
+    <div class="spacer"></div>
+    <div class="updated" id="updatedChip"><span class="lbl">Data as of </span><b id="updatedVal">—</b></div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <p class="kicker">Independent · daily · free forever</p>
+    <h1>Canada &amp; US <span class="thin">Data Breach Digest</span></h1>
+    <p class="sub">Every day we sweep breach dumps, US state-filing registries,
+       privacy regulators and press coverage for incidents that affect people in
+       Canada and the United States — then summarize what leaked and where to
+       confirm it.</p>
+    <div class="cta">
+      <a class="btn primary" href="#events">Latest events ↓</a>
+      <a class="btn" href="https://github.com/nwfella/breach-watch" rel="noopener">Source &amp; methodology ↗</a>
+    </div>
+  </section>
+
+  <div class="stats" id="statsRow"></div>
+
+  <section id="events">
+    <h2>Incidents</h2>
+    <p class="lede">Newest first. Filter by region, type and recency; search titles
+       and descriptions. Sources are linked on every item.</p>
+
+    <div class="toolbar">
+      <div class="search">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        <input id="q" type="search" placeholder="Search organization, data type…" autocomplete="off">
+      </div>
+      <select id="rangeSel" aria-label="Time range">
+        <option value="7">Last 7 days</option>
+        <option value="14" selected>Last 14 days</option>
+        <option value="30">Last 30 days</option>
+        <option value="90">Last 90 days</option>
+        <option value="all">Full archive</option>
+      </select>
+      <select id="kindSel" aria-label="Source type">
+        <option value="all" selected>All sources</option>
+        <option value="hibp">Breach dumps (HIBP)</option>
+        <option value="filing">State filings (CA DOJ)</option>
+        <option value="regulator">Regulator news (OPC / CAI)</option>
+        <option value="news">Press &amp; announcements</option>
+      </select>
+      <div class="count" id="countLbl"></div>
+    </div>
+    <div class="chips grp" id="regionChips">
+      <button class="chip on" data-r="all">All regions</button>
+      <button class="chip r-ca" data-r="ca">Canada</button>
+      <button class="chip r-qc" data-r="qc">Québec</button>
+      <button class="chip r-us" data-r="us">United States</button>
+      <button class="chip r-un" data-r="unknown">Other / unknown</button>
+    </div>
+    <div class="chips" id="kindChips">
+      <button class="chip on" data-k="all">All types</button>
+      <button class="chip" data-k="hibp">Dumps</button>
+      <button class="chip" data-k="filing">CA DOJ filings</button>
+      <button class="chip" data-k="regulator">Regulator</button>
+      <button class="chip" data-k="news">News</button>
+    </div>
+
+    <noscript><span class="noscript">JavaScript is off — the digest data is embedded in this page;
+      enable JavaScript to filter and browse it.</span></noscript>
+    <div class="list" id="list"></div>
+  </section>
+
+  <section id="about">
+    <h2>How this works</h2>
+    <p class="lede">BreachWatch is a free, independent monitor. No account, no ads, no
+       subscription — a trust play, not a product funnel.</p>
+    <div class="method">
+      <div class="mcard">
+        <h3>Sources we sweep</h3>
+        <ul>
+          <li><a href="https://haveibeenpwned.com" rel="noopener">Have I Been Pwned</a> — 1,000+ dump-indexed breaches (keyless corpus API)</li>
+          <li><a href="https://oag.ca.gov/privacy/databreach/list" rel="noopener">California DOJ SB-24 registry</a> — every US state filing, ~45/month</li>
+          <li><a href="https://www.priv.gc.ca/en/privacy-topics/privacy-breaches/" rel="noopener">OPC (federal)</a> — investigations &amp; statements on privacy breaches</li>
+          <li><a href="https://www.cai.gouv.qc.ca" rel="noopener">CAI (Québec)</a> — Law 25 privacy news</li>
+          <li>Press &amp; announcements — Canadian org watchlist + breach queries (EN/FR)</li>
+        </ul>
+      </div>
+      <div class="mcard">
+        <h3>Why “no-dump” coverage matters</h3>
+        <p>Have I Been Pwned can only alert when a stolen database is actually
+           published. Many incidents — especially in Canada — never surface as
+           dumps. We track the <em>announcement</em>: the day an organization or
+           regulator discloses an incident, you see it here.</p>
+        <p><strong>Canada reality check:</strong> neither the federal OPC nor
+           Québec's CAI publishes a per-incident public register, so Canadian
+           coverage leans on regulator news, court/company disclosures and press
+           — which is exactly the gap this site fills.</p>
+      </div>
+      <div class="mcard">
+        <h3>Honest limits</h3>
+        <ul>
+          <li>Record counts are as reported by the source — “accounts affected”, not unique people.</li>
+          <li>“Canada”/“Québec” tags on news items come from the query context, not per-record verification.</li>
+          <li>We monitor disclosures; we are not the disclosing authority.</li>
+          <li>Same incident covered by several outlets may appear multiple times (entity resolution is on the roadmap).</li>
+        </ul>
+        <div class="note">⚠ This site reports public information. It is not legal,
+           security or financial advice — always verify with the organization's
+           official notice before acting.</div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap row">
+    <span>© 2026 BreachWatch · MIT licensed · data collected from public sources</span>
+    <a href="https://github.com/nwfella/breach-watch" rel="noopener">github.com/nwfella/breach-watch</a>
+  </div>
+</footer>
+
+<script id="bw-payload">
+/*__BW_DATA_START__*/
+window.BW_DATA = null;
+/*__BW_DATA_END__*/
+</script>
+<script>
+(function () {
+  'use strict';
+  var D = window.BW_DATA;
+  if (!D || !D.events) { return; }
+
+  var MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  function fmtDate(iso) {
+    if (!iso) return '';
+    var p = iso.split('-'); if (p.length < 3) return iso;
+    return MONTHS[+p[1] - 1] + ' ' + (+p[2]) + ', ' + p[0];
+  }
+  function fmtNum(n) {
+    if (!n) return null;
+    if (n >= 1e9) return (n / 1e9).toFixed(2).replace(/\.?0+$/, '') + 'B';
+    if (n >= 1e6) return (n / 1e6).toFixed(1).replace(/\.0$/, '') + 'M';
+    if (n >= 1e3) return (n / 1e3).toFixed(0) + 'K';
+    return String(n);
+  }
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  var REGION = { ca: ['Canada', 'r-ca'], qc: ['Québec', 'r-qc'],
+                 us: ['United States', 'r-us'], unknown: ['Other / unknown', 'r-un'] };
+  var KIND = { hibp: 'HIBP dump', filing: 'CA DOJ filing', regulator: 'Regulator', news: 'News' };
+  var KIND_OF = { hibp_api: 'hibp', hibp_rss: 'hibp', ca_doj: 'filing',
+                  opc_news: 'regulator', cai_news: 'regulator', google_news: 'news' };
+
+  var state = { q: '', region: 'all', kind: 'all', range: 14 };
+  var listEl = document.getElementById('list');
+  var countEl = document.getElementById('countLbl');
+
+  // stats row
+  var statsRow = document.getElementById('statsRow');
+  var S = D.stats || {};
+  var statCards = [
+    [fmtNum(S.events) || '0', 'events tracked (full archive)'],
+    [fmtNum(S.hibp) || '0', 'dump-indexed breaches in the HIBP corpus'],
+    [fmtNum(S.filings) || '0', 'US state breach filings (California DOJ)'],
+    [fmtNum(S.ndItems) || '0', 'no-dump items — regulator & press announcements'],
+    [fmtNum(S.records) || '0', 'records referenced across indexed dumps'],
+  ];
+  statCards.forEach(function (c) {
+    var el = document.createElement('div');
+    el.className = 'stat';
+    el.innerHTML = '<div class="v">' + esc(c[0]) + '</div><div class="k">' + esc(c[1]) + '</div>';
+    statsRow.appendChild(el);
+  });
+
+  // updated chip
+  var upd = D.updated || '';
+  document.getElementById('updatedVal').textContent = upd ? fmtDate(upd.slice(0, 10)) : '—';
+
+  function inRange(d) {
+    if (!d) return state.range === 'all';
+    if (state.range === 'all') return true;
+    var cut = new Date(); cut.setDate(cut.getDate() - (+state.range));
+    return d >= cut.toISOString().slice(0, 10);
+  }
+
+  function render() {
+    var q = state.q.toLowerCase().trim();
+    var out = [];
+    for (var i = 0; i < D.events.length; i++) {
+      var e = D.events[i];
+      if (state.region !== 'all' && e.r !== state.region) continue;
+      var k = KIND_OF[e.s] || 'news';
+      if (state.kind !== 'all' && k !== state.kind) continue;
+      if (!inRange(e.d)) continue;
+      if (q) {
+        var hay = (e.t + ' ' + (e.x || '') + ' ' + (e.dc || []).join(' ')).toLowerCase();
+        if (hay.indexOf(q) === -1) continue;
+      }
+      out.push(e);
+    }
+    countEl.textContent = out.length === 1 ? '1 event' : out.length + ' events';
+
+    if (!out.length) {
+      listEl.innerHTML = '<div class="empty">No incidents match these filters — try widening the time range or clearing the search.</div>';
+      return;
+    }
+    out.sort(function (a, b) { return (b.d || '0000').localeCompare(a.d || '0000'); });
+    var SHOW = 250, html = [];
+    for (var j = 0; j < out.length && j < SHOW; j++) {
+      var ev = out[j];
+      var reg = REGION[ev.r] || REGION.unknown;
+      var bits = [];
+      bits.push('<div class="ev"><div class="ev-top">');
+      bits.push('<span class="rtag ' + reg[1] + '">' + reg[0] + '</span>');
+      bits.push('<span class="ktag">' + KIND_OF[ev.s] + '</span>');
+      if (ev.sens) bits.push('<span class="sens">sensitive data</span>');
+      bits.push('<span class="date">' + fmtDate(ev.d) + '</span></div>');
+      bits.push('<h3><a href="' + esc(ev.u) + '" rel="noopener" target="_blank">' + esc(ev.t) + ' ↗</a></h3>');
+      if (ev.x) bits.push('<p class="desc">' + esc(ev.x) + '</p>');
+      bits.push('<div class="meta">');
+      if (ev.n) bits.push('<span class="rec">' + fmtNum(ev.n) + ' records</span>');
+      (ev.dc || []).slice(0, 6).forEach(function (c2) { bits.push('<span class="dc">' + esc(c2) + '</span>'); });
+      bits.push('</div></div>');
+      html.push(bits.join(''));
+    }
+    if (out.length > SHOW) {
+      html.push('<div class="empty">Showing ' + SHOW + ' of ' + out.length +
+                ' — narrow with search or time range.</div>');
+    }
+    listEl.innerHTML = html.join('');
+  }
+
+  // events
+  document.getElementById('q').addEventListener('input', function (ev2) {
+    state.q = ev2.target.value; render();
+  });
+  document.getElementById('rangeSel').addEventListener('change', function (ev2) {
+    state.range = ev2.target.value; render();
+  });
+  function bindChips(id, key, attr) {
+    var box = document.getElementById(id);
+    box.addEventListener('click', function (ev2) {
+      var b = ev2.target.closest('button[data-' + attr + ']');
+      if (!b) return;
+      state[key] = b.getAttribute('data-' + attr);
+      box.querySelectorAll('.chip').forEach(function (c) { c.classList.toggle('on', c === b); });
+      render();
+    });
+  }
+  bindChips('regionChips', 'region', 'r');
+  bindChips('kindChips', 'kind', 'k');
+
+  render();
+})();
+</script>
+</body>
+</html>
