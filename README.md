@@ -8,6 +8,19 @@ Free forever + donate/affiliate model (no subscription).
 Skeleton v0.2 - collectors verified against **live sources** on 2026-09-07.
 Google News no-dump leg added; 45-day news backfill archived (28 events).
 
+## Live site
+
+**https://nwfella.github.io/breach-watch/** — static digest dashboard of the
+archive. Single-file HTML, data baked at build time, zero runtime fetches
+(works in IT environments that block XHR on github.io).
+
+```bash
+python main.py                 # collect (daily)
+python scripts/build_site.py   # bake out/index.html from data/events.jsonl
+node scripts/verify_site.js    # jsdom boot test (npm i -D jsdom once)
+# deploy: copy out/index.html onto the gh-pages branch and push
+```
+
 ## What the live-source test found
 
 | Source | Endpoint | What it gives | Verified |
