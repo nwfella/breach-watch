@@ -344,25 +344,40 @@ window.BW_DATA = null;
     return d >= cut.toISOString().slice(0, 10);
   }
 
+  function rangeLabel() {
+    if (state.range === 'all') return 'the full archive';
+    return 'the last ' + state.range + ' days';
+  }
+
   function render() {
     var q = state.q.toLowerCase().trim();
-    var out = [];
+    var out = [], older = 0;
     for (var i = 0; i < D.events.length; i++) {
       var e = D.events[i];
       if (state.region !== 'all' && e.r !== state.region) continue;
       var k = KIND_OF[e.s] || 'news';
       if (state.kind !== 'all' && k !== state.kind) continue;
-      if (!inRange(e.d)) continue;
+      var inR = inRange(e.d);
+      // A query means "find this incident", not "browse this period": the time
+      // range narrows browsing ONLY. When you search, the whole baked window is
+      // searched and the older hits are counted out loud rather than hidden.
+      if (!inR && !q) continue;
       if (q) {
         var hay = (e.t + ' ' + (e.x || '') + ' ' + (e.dc || []).join(' ')).toLowerCase();
         if (hay.indexOf(q) === -1) continue;
+        if (!inR) older++;
       }
       out.push(e);
     }
-    countEl.textContent = out.length === 1 ? '1 event' : out.length + ' events';
+    var lbl = out.length === 1 ? '1 event' : out.length + ' events';
+    if (q) lbl += ' · search covers the full archive'
+                + (older ? ' (' + older + ' outside ' + rangeLabel() + ')' : '');
+    countEl.textContent = lbl;
 
     if (!out.length) {
-      listEl.innerHTML = '<div class="empty">No incidents match these filters — try widening the time range or clearing the search.</div>';
+      listEl.innerHTML = '<div class="empty">' + (q
+        ? 'Nothing in the archive matches \u201c' + esc(state.q.trim()) + '\u201d.'
+        : 'No incidents match these filters — try widening the time range or clearing the search.') + '</div>';
       return;
     }
     out.sort(function (a, b) { return (b.d || '0000').localeCompare(a.d || '0000'); });
